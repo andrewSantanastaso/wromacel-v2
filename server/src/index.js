@@ -28,7 +28,7 @@ app.get('/api/health', async (_req, res) => {
 app.use('/api/books', booksRouter);
 
 // Serve the static frontend from /public so one process serves both API and app.
-app.use(express.static(join(__dirname, '..', '..', 'public')));
+app.use(express.static(join(__dirname, '..', 'public')));
 
 // 404 for unmatched /api routes
 app.use('/api', (_req, res) => res.status(404).json({ error: 'Not found.' }));

@@ -49,6 +49,12 @@ export const TROPES = [
   'Villain',
   'Workplace',
   'Young Adult',
+  'Single Parent',
+  'Best Friend\'s Brother',
+  'Best Friend\'s Sister',
+  'Ex\'s Dad',
+  'Ex\'s Brother',
+
 ];
 
 // Fast membership check for validation.

@@ -10,6 +10,8 @@ export const TROPES = [
   'Age Gap',
   'Arranged Marriage',
   'Bad Boy',
+  "Best Friend's Brother",
+  "Best Friend's Sister",
   'Billionaire',
   "Brother's Best Friend",
   'Captive',
@@ -17,6 +19,8 @@ export const TROPES = [
   'Dark',
   'Emotional',
   'Enemies to Lovers',
+  "Ex's Brother",
+  "Ex's Dad",
   'Fake Dating',
   'Fantasy',
   'Fated Mates',
@@ -40,6 +44,7 @@ export const TROPES = [
   'Second Chance',
   'Secret Society',
   'Serial Killer',
+  'Single Parent',
   'Slow Burn',
   'Small Town',
   'Sports',
@@ -49,12 +54,6 @@ export const TROPES = [
   'Villain',
   'Workplace',
   'Young Adult',
-  'Single Parent',
-  'Best Friend\'s Brother',
-  'Best Friend\'s Sister',
-  'Ex\'s Dad',
-  'Ex\'s Brother',
-
 ];
 
 // Fast membership check for validation.

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Romansh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css" />
+<style>
+  :root{
+    --bg:#fbf7f4; --surface:#ffffff; --surface2:#f5efe9; --ink:#2a2320; --muted:#8a7d74;
+    --hint:#b4a89f; --line:rgba(60,40,30,0.12); --line2:rgba(60,40,30,0.22);
+    --accent:#b13b6b; --accent-soft:#fbe9f0;
+    --ok-bg:#e7f3ec; --ok-fg:#1d7a4d; --ok-line:#9fd4b6;
+    --mid-bg:#fdf0db; --mid-fg:#9a6510; --mid-line:#f0c97f;
+    --no-bg:#f3ede8; --no-fg:#8a7d74; --no-line:rgba(60,40,30,0.12);
+    --radius-md:8px; --radius-lg:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1a1614; --surface:#241f1c; --surface2:#2c2622; --ink:#f2ebe6; --muted:#a89c93;
+      --hint:#7a6f67; --line:rgba(255,235,225,0.12); --line2:rgba(255,235,225,0.22);
+      --accent:#e8729e; --accent-soft:#3a2530;
+      --ok-bg:#16352a; --ok-fg:#6fd49e; --ok-line:#2c6b4d;
+      --mid-bg:#3a2e16; --mid-fg:#e8c074; --mid-line:#6b5320;
+      --no-bg:#2c2622; --no-fg:#a89c93; --no-line:rgba(255,235,225,0.12);
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:"Inter",system-ui,-apple-system,sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; min-height:100vh; padding:24px 16px 48px;}
+  .wrap{max-width:680px; margin:0 auto;}
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);}
+  header.top{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;}
+  .brand{font-family:"Fraunces",serif; font-size:30px; font-weight:600; margin:0; letter-spacing:-0.01em; color:var(--accent);}
+  .tagline{font-size:13px; color:var(--muted); margin:2px 0 0;}
+  button{font-family:inherit; cursor:pointer; background:transparent; color:var(--ink); border:0.5px solid var(--line2); border-radius:var(--radius-md); padding:8px 12px; font-size:14px; transition:background .15s, transform .05s;}
+  button:hover{background:var(--surface2);}
+  button:active{transform:scale(0.98);}
+  button:disabled{opacity:.5; cursor:default;}
+  button.primary{background:var(--accent); color:#fff; border-color:var(--accent);}
+  button.primary:hover{filter:brightness(1.05); background:var(--accent);}
+  .icon-btn{width:38px; height:38px; padding:0; display:flex; align-items:center; justify-content:center;}
+  #legend{display:none; font-size:12px; color:var(--muted); background:var(--surface2); border-radius:var(--radius-md); padding:11px 13px; margin-bottom:16px; line-height:1.6;}
+  #legend b{color:var(--ink); font-weight:500;}
+  .g-ok{color:var(--ok-fg);} .g-mid{color:var(--mid-fg);}
+  .searchbox{position:relative; margin-bottom:14px;}
+  input[type=text],input[type=number]{width:100%; font-family:inherit; font-size:15px; color:var(--ink); background:var(--surface); border:0.5px solid var(--line2); border-radius:var(--radius-md); height:42px; padding:0 12px; outline:none; transition:box-shadow .15s, border-color .15s;}
+  #search{padding-left:36px;}
+  input:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);}
+  input:disabled{opacity:0.6;}
+  .search-ic{position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:17px; color:var(--hint);}
+  #results{display:none; position:relative; margin-top:4px; border:0.5px solid var(--line2); border-radius:var(--radius-md); background:var(--surface); max-height:200px; overflow-y:auto; z-index:5;}
+  .opt{padding:9px 13px; cursor:pointer; font-size:14px;}
+  .opt:not(:last-child){border-bottom:0.5px solid var(--line);}
+  .opt .a{color:var(--muted); font-size:12px;}
+  .head-row{display:grid; grid-template-columns:1.8fr .85fr .85fr .9fr 1.8fr; gap:6px; font-size:10.5px; color:var(--hint); text-transform:uppercase; letter-spacing:.04em; padding:0 2px 6px;}
+  #board{display:flex; flex-direction:column; gap:6px;}
+  .row{display:grid; grid-template-columns:1.8fr .85fr .85fr .9fr 1.8fr; gap:6px;}
+  .cell{border-radius:var(--radius-md); padding:8px 6px; font-size:12px; line-height:1.35; display:flex; flex-direction:column; justify-content:center; min-height:48px; border:0.5px solid var(--no-line); background:var(--no-bg); color:var(--no-fg);}
+  .cell .ttl{font-weight:500; color:var(--ink);}
+  .cell .sub{font-size:11px;}
+  .cell.ok{background:var(--ok-bg); border-color:var(--ok-line);}
+  .cell.ok .ttl{color:var(--ok-fg);} .cell.ok .sub{color:var(--ok-fg);}
+  .cell.mid{background:var(--mid-bg); border-color:var(--mid-line);}
+  .cell.mid .ttl{color:var(--mid-fg);}
+  .cell.empty{background:transparent; border:0.5px dashed var(--line); min-height:48px;}
+  .center{align-items:center; text-align:center;}
+  .tropecell{border-radius:var(--radius-md); padding:6px; min-height:48px; display:flex; flex-wrap:wrap; align-content:center; border:0.5px solid var(--no-line); background:var(--no-bg);}
+  .tropecell.ok{background:var(--ok-bg); border-color:var(--ok-line);}
+  .tropecell.mid{background:var(--mid-bg); border-color:var(--mid-line);}
+  .tag{display:inline-block; border-radius:6px; padding:1px 6px; margin:1px 2px 1px 0; font-size:11px; background:var(--surface2); color:var(--muted);}
+  .tag.hit{background:var(--ok-bg); color:var(--ok-fg);}
+  #status{margin-top:16px; display:none;}
+  .result-card{border-radius:var(--radius-lg); padding:16px; text-align:center; background:var(--surface2);}
+  .result-card.win{background:var(--ok-bg);}
+  .result-card h3{margin:0 0 4px; font-size:16px; font-weight:600;}
+  .result-card.win h3{color:var(--ok-fg);}
+  .result-card p{margin:0 0 4px; font-size:14px; color:var(--ink);}
+  .share-row{display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;}
+  .bar{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .bar .count{margin-left:auto; align-self:center; font-size:12px; color:var(--hint);}
+  #addpanel{display:none; background:var(--surface); border:0.5px solid var(--line2); border-radius:var(--radius-lg); padding:16px; margin-bottom:16px;}
+  #addpanel h3{margin:0 0 12px; font-size:15px; font-weight:600;}
+  .field{margin-bottom:10px;}
+  .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:4px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .spice-toggle{display:flex; gap:8px;}
+  .spice-toggle button{flex:1;}
+  .spice-toggle button.sel{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .add-actions{display:flex; gap:8px; margin-top:6px;}
+  .err{color:#c0392b; font-size:12px; margin-top:6px; min-height:14px;}
+  .hintline{font-size:11px; color:var(--hint); margin-top:4px;}
+  .banner{font-size:13px; text-align:center; padding:9px 12px; border-radius:var(--radius-md); margin-bottom:16px;}
+  .banner.load{background:var(--surface2); color:var(--muted);}
+  .banner.error{background:#fdecea; color:#c0392b;}
+  footer{margin-top:32px; text-align:center; font-size:12px; color:var(--hint);}
+  @media (max-width:480px){
+    body{padding:18px 12px 40px;}
+    .brand{font-size:26px;}
+    .head-row,.row{grid-template-columns:1.6fr .62fr .62fr .72fr 1.7fr; gap:5px;}
+    .cell{min-height:44px; padding:7px 4px; font-size:11.5px;}
+    .cell .sub{font-size:10.5px;}
+    .cell.center .ttl{font-size:11.5px;}
+    .spice-word{display:none;}
+    .tropecell{min-height:44px; padding:5px;}
+    .tag{font-size:10.5px; padding:1px 5px; margin:1px 1px;}
+    .icon-btn{width:42px; height:42px;}
+    input[type=text],input[type=number]{height:44px;}
+    .bar{gap:6px;}
+    .bar button{flex:1 1 auto;}
+    .bar .count{flex-basis:100%; margin-left:0; text-align:center;}
+    .grid2{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="sr-only">Romansh, a romance-book guessing game</h1>
+  <header class="top">
+    <div>
+      <p class="brand">Romansh</p>
+      <p class="tagline">Guess the romance book in 6 tries</p>
+    </div>
+    <button class="icon-btn" id="howto" aria-label="How to play"><i class="ti ti-help" aria-hidden="true"></i></button>
+  </header>
+
+  <div id="legend">
+    Pick a book each round — each cell shows how it compares to the secret book.
+    <span class="g-ok">Green</span> = exact match.
+    <span class="g-mid">Amber</span> = partial (a shared trope, or within 3 years / 60 pages).
+    Arrows on <b>Year</b> &amp; <b>Pages</b> point toward the answer (↑ higher, ↓ lower).
+    <b>Spicy</b> is yes/no: green when your guess's heat matches the answer.
+  </div>
+
+  <div id="banner" class="banner load">Loading catalog…</div>
+
+  <div class="bar" id="controls" style="display:none;">
+    <button id="again" class="primary"><i class="ti ti-refresh" aria-hidden="true"></i> Play again</button>
+    <button id="addbtn"><i class="ti ti-plus" aria-hidden="true"></i> Add a book</button>
+    <button id="reveal"><i class="ti ti-eye" aria-hidden="true"></i> Reveal answer</button>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="addpanel">
+    <h3>Add a book to the catalog</h3>
+    <div class="field"><label for="f-title">Title</label><input type="text" id="f-title" placeholder="e.g. The Love Hypothesis" /></div>
+    <div class="field"><label for="f-author">Author</label><input type="text" id="f-author" placeholder="e.g. Ali Hazelwood" /></div>
+    <div class="grid2">
+      <div class="field"><label for="f-year">Publish year</label><input type="number" id="f-year" placeholder="2021" min="1900" max="2100" /></div>
+      <div class="field"><label for="f-pages">Pages</label><input type="number" id="f-pages" placeholder="384" min="1" max="5000" /></div>
+    </div>
+    <div class="field">
+      <label>Spice</label>
+      <div class="spice-toggle">
+        <button type="button" id="sp-spicy"><i class="ti ti-flame" aria-hidden="true"></i> Spicy</button>
+        <button type="button" id="sp-sweet"><i class="ti ti-cup" aria-hidden="true"></i> Sweet</button>
+      </div>
+    </div>
+    <div class="field"><label for="f-tropes">Tropes</label><input type="text" id="f-tropes" placeholder="Fake Dating, STEM, Forced Proximity" /><div class="hintline">Comma-separated. 1–6 tropes.</div></div>
+    <div class="err" id="add-err"></div>
+    <div class="add-actions">
+      <button class="primary" id="add-save"><i class="ti ti-check" aria-hidden="true"></i> Save book</button>
+      <button id="add-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <div class="searchbox">
+    <i class="ti ti-search search-ic" aria-hidden="true"></i>
+    <input id="search" type="text" autocomplete="off" placeholder="Type a book title to guess…" disabled />
+    <div id="results"></div>
+  </div>
+
+  <div class="head-row"><span>Author</span><span>Year</span><span>Pages</span><span>Spicy</span><span>Tropes</span></div>
+  <div id="board"></div>
+  <div id="status"></div>
+  <footer>Catalog served from your API</footer>
+</div>
+
+<script>
+(function(){
+  // If the frontend is served by the same Express process, relative paths just work.
+  // If you host the frontend separately, set API_BASE to your API origin.
+  const API_BASE = '';
+
+  const MAX=6;
+  let books=[];          // full catalog from the server
+  let answer=null, guesses=[], over=false;
+
+  const $=id=>document.getElementById(id);
+  const search=$('search'), results=$('results'), board=$('board'),
+        statusEl=$('status'), countEl=$('count'), banner=$('banner'), controls=$('controls');
+
+  $('howto').addEventListener('click',()=>{const l=$('legend'); l.style.display=l.style.display==='block'?'none':'block';});
+
+  function updateCount(){ countEl.textContent = books.length + ' books in catalog'; }
+
+  async function loadCatalog(){
+    banner.className='banner load'; banner.style.display='block'; banner.textContent='Loading catalog…';
+    try{
+      const res=await fetch(API_BASE+'/api/books');
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      books=await res.json();
+      if(!Array.isArray(books)||books.length===0) throw new Error('empty catalog');
+      banner.style.display='none';
+      controls.style.display='flex';
+      search.disabled=false;
+      updateCount();
+      newGame();
+    }catch(err){
+      banner.className='banner error';
+      banner.innerHTML='Couldn\'t reach the catalog API. Is the server running? <button id="retry" style="margin-left:8px;">Retry</button>';
+      $('retry').addEventListener('click',loadCatalog);
+    }
+  }
+
+  function numCell(val,target,near){
+    const exact=val===target, close=Math.abs(val-target)<=near;
+    const cls=exact?'ok':close?'mid':'';
+    let arrow=''; if(!exact){ arrow = val<target?' <i class="ti ti-arrow-up" aria-hidden="true"></i>':' <i class="ti ti-arrow-down" aria-hidden="true"></i>'; }
+    return `<div class="cell center ${cls}"><span class="ttl">${val}${arrow}</span></div>`;
+  }
+  function spiceCell(val,target){
+    const cls=val===target?'ok':'';
+    return `<div class="cell center ${cls}"><span class="ttl"><i class="ti ${val?'ti-flame':'ti-cup'}" aria-hidden="true"></i> <span class="spice-word">${val?'Spicy':'Sweet'}</span></span></div>`;
+  }
+  function tropeCell(g,a){
+    const setA=new Set(a);
+    const tags=g.map(t=>`<span class="tag ${setA.has(t)?'hit':''}">${t}</span>`).join('');
+    const mc=g.filter(t=>setA.has(t)).length;
+    const cls=(mc===a.length&&g.length===a.length)?'ok':mc>0?'mid':'';
+    return `<div class="tropecell ${cls}">${tags}</div>`;
+  }
+  function render(){
+    board.innerHTML='';
+    guesses.forEach(g=>{
+      const authOK=g.author===answer.author;
+      const row=document.createElement('div'); row.className='row';
+      row.innerHTML=`<div class="cell ${authOK?'ok':''}"><span class="ttl">${g.title}</span><span class="sub" style="color:${authOK?'var(--ok-fg)':'var(--muted)'}">${g.author}</span></div>`
+        + numCell(g.year,answer.year,3)+numCell(g.pages,answer.pages,60)+spiceCell(g.spicy,answer.spicy)+tropeCell(g.tropes,answer.tropes);
+      board.appendChild(row);
+    });
+    for(let i=guesses.length;i<MAX;i++){
+      const row=document.createElement('div'); row.className='row';
+      for(let j=0;j<5;j++) row.innerHTML+='<div class="cell empty"></div>';
+      board.appendChild(row);
+    }
+  }
+  function finish(win,revealed){
+    over=true; search.disabled=true; search.placeholder=win?'Solved!':'Round over'; results.style.display='none';
+    statusEl.style.display='block';
+    const head=revealed?'Answer revealed':(win?'Nailed it in '+guesses.length+(guesses.length===1?' guess!':' guesses!'):'Out of guesses');
+    statusEl.innerHTML=`<div class="result-card ${win?'win':''}"><h3>${head}</h3><p>${answer.title} — ${answer.author} (${answer.year})</p><div class="share-row"><button class="primary" id="next"><i class="ti ti-refresh" aria-hidden="true"></i> Play again</button></div></div>`;
+    $('next').addEventListener('click',newGame);
+  }
+  function submit(book){
+    if(over) return;
+    guesses.push(book); search.value=''; results.style.display='none'; render();
+    if(book.title===answer.title && book.author===answer.author) finish(true,false);
+    else if(guesses.length>=MAX) finish(false,false);
+  }
+  search.addEventListener('input',()=>{
+    const q=search.value.trim().toLowerCase();
+    if(!q){ results.style.display='none'; return; }
+    const guessed=new Set(guesses.map(g=>g.title+g.author));
+    const matches=books.filter(b=>!guessed.has(b.title+b.author)&&(b.title.toLowerCase().includes(q)||b.author.toLowerCase().includes(q))).slice(0,8);
+    if(!matches.length){ results.style.display='none'; return; }
+    results.innerHTML=matches.map(b=>`<div class="opt" data-i="${books.indexOf(b)}"><span style="font-weight:500">${b.title}</span> <span class="a">${b.author} · ${b.year}</span></div>`).join('');
+    results.style.display='block';
+    results.querySelectorAll('.opt').forEach(el=>el.addEventListener('click',()=>submit(books[+el.dataset.i])));
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') results.style.display='none'; });
+
+  function newGame(){
+    if(!books.length) return;
+    answer=books[Math.floor(Math.random()*books.length)];
+    guesses=[]; over=false;
+    search.disabled=false; search.value=''; search.placeholder='Type a book title to guess…';
+    statusEl.style.display='none'; statusEl.innerHTML=''; results.style.display='none';
+    render();
+  }
+  $('again').addEventListener('click',newGame);
+  $('reveal').addEventListener('click',()=>{ if(!over) finish(false,true); });
+
+  // ----- Add a book (POSTs to the API) -----
+  const panel=$('addpanel'), errEl=$('add-err');
+  let spiceVal=null;
+  const spSpicy=$('sp-spicy'), spSweet=$('sp-sweet');
+  spSpicy.addEventListener('click',()=>{spiceVal=true; spSpicy.classList.add('sel'); spSweet.classList.remove('sel');});
+  spSweet.addEventListener('click',()=>{spiceVal=false; spSweet.classList.add('sel'); spSpicy.classList.remove('sel');});
+  function resetForm(){ ['f-title','f-author','f-year','f-pages','f-tropes'].forEach(id=>$(id).value=''); spiceVal=null; spSpicy.classList.remove('sel'); spSweet.classList.remove('sel'); errEl.textContent=''; }
+  $('addbtn').addEventListener('click',()=>{ panel.style.display=panel.style.display==='block'?'none':'block'; if(panel.style.display==='block') $('f-title').focus(); });
+  $('add-cancel').addEventListener('click',()=>{ panel.style.display='none'; resetForm(); });
+
+  $('add-save').addEventListener('click',async()=>{
+    const payload={
+      title:$('f-title').value.trim(),
+      author:$('f-author').value.trim(),
+      year:parseInt($('f-year').value,10),
+      pages:parseInt($('f-pages').value,10),
+      spicy:spiceVal,
+      tropes:$('f-tropes').value
+    };
+    // light client check; the server validates authoritatively
+    if(!payload.title||!payload.author){ errEl.textContent='Title and author are required.'; return; }
+    if(spiceVal===null){ errEl.textContent='Pick Spicy or Sweet.'; return; }
+    const saveBtn=$('add-save'); saveBtn.disabled=true; errEl.textContent='';
+    try{
+      const res=await fetch(API_BASE+'/api/books',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const data=await res.json();
+      if(!res.ok){ errEl.textContent=data.error||('Error '+res.status); return; }
+      books.push(data);
+      updateCount();
+      panel.style.display='none'; resetForm();
+      countEl.textContent='✓ added · '+books.length+' books in catalog';
+      setTimeout(updateCount,1800);
+    }catch(err){
+      errEl.textContent='Network error — could not save.';
+    }finally{
+      saveBtn.disabled=false;
+    }
+  });
+
+  loadCatalog();
+})();
+</script>
+</body>
+</html>

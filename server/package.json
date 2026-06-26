@@ -1,7 +1,7 @@
 {
-  "name": "romansh-server",
+  "name": "wromancel-server",
   "version": "1.0.0",
-  "description": "Backend API for Romansh, the romance-book guessing game",
+  "description": "Backend API for WROMANCEL, the romance-book guessing game",
   "type": "module",
   "main": "src/index.js",
   "scripts": {

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { query } from '../db.js';
+import { TROPES, TROPE_SET } from '../tropes.js';
 
 const router = Router();
 
@@ -44,11 +45,20 @@ function validateBook(body) {
   if (!Array.isArray(tropes) || tropes.length < 1)
     return { error: 'Provide at least one trope.' };
   if (tropes.length > 6) return { error: 'Six tropes maximum.' };
-  if (tropes.some((t) => typeof t !== 'string' || t.length > 60))
-    return { error: 'Each trope must be a string under 60 characters.' };
+  // Strict: every trope must be one of the canonical values.
+  const invalid = tropes.filter((t) => !TROPE_SET.has(t));
+  if (invalid.length > 0)
+    return { error: `Not an allowed trope: ${invalid.join(', ')}.` };
+  // De-duplicate while preserving order, in case the same trope is sent twice.
+  const uniqueTropes = [...new Set(tropes)];
 
-  return { value: { title, author, year, pages, spicy, tropes } };
+  return { value: { title, author, year, pages, spicy, tropes: uniqueTropes } };
 }
+
+// GET /api/tropes — the canonical list, so the frontend can build its picker.
+router.get('/tropes', (_req, res) => {
+  res.json(TROPES);
+});
 
 // GET /api/books  — full catalog, or ?q= to search title/author
 router.get('/', async (req, res, next) => {

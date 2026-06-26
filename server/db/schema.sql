@@ -1,4 +1,4 @@
--- Romansh catalog schema
+-- WROMANCEL catalog schema
 -- One table: books. Tropes are stored as a text array.
 
 CREATE TABLE IF NOT EXISTS books (

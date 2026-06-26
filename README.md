@@ -1,4 +1,4 @@
-# Romansh — backend + app
+# WROMANCEL — backend + app
 
 A Wordle-style guessing game for modern romance books. The book catalog now lives
 in Postgres and is served by a small Express API, so books added through the app

@@ -41,5 +41,5 @@ app.use((err, _req, res, _next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Romansh API + app listening on http://localhost:${PORT}`);
+  console.log(`WROMANCEL API + app listening on http://localhost:${PORT}`);
 });

@@ -8,6 +8,7 @@
 
 export const TROPES = [
   'Age Gap',
+  'Amnesia',
   'Arranged Marriage',
   'Bad Boy',
   "Best Friend's Brother",
@@ -16,6 +17,7 @@ export const TROPES = [
   "Brother's Best Friend",
   'Captive',
   'Contemporary',
+  'Cowboy',
   'Dark',
   'Emotional',
   'Enemies to Lovers',
@@ -30,6 +32,7 @@ export const TROPES = [
   'Grumpy Sunshine',
   'Historical',
   'LGBTQ',
+  'Love Triangle',
   'Mafia',
   'Marriage of Convenience',
   'Masked',
